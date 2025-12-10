@@ -15,12 +15,12 @@ try {
     $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE email = ?");
     $stmt->execute([$email]);
     
-    if($stmt->rowCount() === 0) {
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if(!$user) {
         echo json_encode(['success' => false, 'message' => 'Invalid credentials']);
         exit;
     }
-    
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if(!password_verify($password, $user['password'])) {
         echo json_encode(['success' => false, 'message' => 'Invalid credentials']);
